@@ -1,6 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const crypto = require("crypto");
-
+const connectDB = require("./config/db");
 const app = express();
 
 app.use(express.json());
@@ -17,7 +18,7 @@ app.post("/jobs", (req, res) => {
 
   res.status(201).json(job);
 });
-
+connectDB();
 app.listen(4000, () => {
   console.log("FlowForge server running on port 4000");
 });
