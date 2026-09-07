@@ -4,6 +4,8 @@ const express = require("express");
 const crypto = require("crypto");
 const connectDB = require("./config/db");
 const Job = require("./models/Job");
+const {addJob} = require("./queue/jobQueue");
+
 
 const app = express();
 
@@ -19,6 +21,9 @@ app.post("/jobs", async (req, res) => {
   });
 
   await job.save();
+  // First make sure the Job exists persistently → then put it into the queue for processing.
+  
+  addJob(job);
 
   res.status(201).json(job);
 });
