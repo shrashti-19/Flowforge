@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const connectDB = require("./config/db");
 const Job = require("./models/Job");
 const {addJob} = require("./queue/jobQueue");
-
+const {connectRedis} = require("./config/redis")
 
 const app = express();
 
@@ -29,6 +29,7 @@ app.post("/jobs", async (req, res) => {
 });
 
 connectDB();
+connectRedis();
 
 app.listen(4000, () => {
   console.log("FlowForge server running on port 4000");
