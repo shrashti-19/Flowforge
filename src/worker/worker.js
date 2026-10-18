@@ -1,14 +1,24 @@
-const {getNextJob} = require("../queue/jobQueue");
+//.env variables access
+require("dotenv").config();
 
-const processJobs  = ()=>{
-    const job = getNextJob();
+const { redisClient, connectRedis } = require("../config/redis");
+const connectDB = require("../config/db");
+const Job = require("../models/Job");
 
-    if(!job){
-        return;
-    }
+const startWorker = async () => {
+  await connectRedis();
+//   console.log("Trying MongoDB...");
+  await connectDB();
 
-    console.log("Processing job: ", job._id);
-    
+  while (true) {
+    const result = await redisClient.blPop("jobs", 0);
+
+    console.log("Received job:", result);
+
+    const job = await Job.findById(result.element);
+
+    console.log("Job fetched:", job);
+  }
 };
 
-processJobs();
+startWorker();
