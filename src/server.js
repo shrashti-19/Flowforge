@@ -28,7 +28,18 @@ app.post("/jobs", async (req, res) => {
   res.status(201).json(job);
 });
 
+app.get("/jobs/:id", async (req, res) => {
+  const { id } = req.params;
 
+  // finding the job from MongoDB
+  const job = await Job.findById(id);
+
+  if (!job) {
+    return res.status(404).json({ message: "Job not found" });
+  }
+
+  return res.status(200).json(job);
+});
 
 connectDB();
 connectRedis();
