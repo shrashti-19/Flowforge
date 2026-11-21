@@ -28,6 +28,8 @@ app.post("/jobs", async (req, res) => {
   res.status(201).json(job);
 });
 
+
+
 connectDB();
 connectRedis();
 
